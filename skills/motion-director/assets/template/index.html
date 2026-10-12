@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>__ID__</title>
+<style>
+/* Replace this palette and type with the product's own (brief.md → "Its world"). */
+:root{--bg:#0e0e10;--ink:#f2f2f3;--mut:#8d8d95;--accent:#ff7a14}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:__W__px;height:__H__px;background:var(--bg);overflow:hidden}
+#root{position:relative;width:__W__px;height:__H__px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:system-ui,sans-serif}
+.clip{position:absolute;inset:0;width:__W__px;height:__H__px}
+.center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.big{font-weight:800;font-size:120px;letter-spacing:-.03em;opacity:0}
+.small{font-size:40px;color:var(--mut);margin-top:24px;opacity:0}
+#thing{width:220px;height:220px;border-radius:50%;background:var(--accent);opacity:0}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="__ID__" data-duration="__DUR__" data-width="__W__" data-height="__H__" data-fps="__FPS__">
+  <!-- Every element that lives in a scene carries data-scene; make.py writes its data-start/data-duration from cues.json. -->
+  <div class="clip center" data-scene="hook" data-start="0" data-duration="1" data-track-index="1"><div id="thing"></div></div>
+  <div class="clip center" data-scene="moment" data-start="0" data-duration="1" data-track-index="1"><div class="big" id="m1">the moment</div><div class="small" id="m2">replace every scene with the film</div></div>
+  <div class="clip center" data-scene="lockup" data-start="0" data-duration="1" data-track-index="1"><div class="big" id="n1">name</div><div class="small" id="n2">one line · where to go</div></div>
+  <audio id="mix" class="clip" data-start="0" data-duration="__DUR__" data-track-index="20" data-volume="1" src="assets/audio/mix.wav"></audio>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.14.2/gsap.min.js"></script>
+<script src="cues.js"></script>
+<script>
+// Times come from cues.json only (window.CUES is generated from it). Do not type a second here.
+const C=window.CUES, cue=k=>C.cues[k].t, scene=id=>C.scenes.find(s=>s.id===id);
+window.__timelines = window.__timelines || {};
+const tl = gsap.timeline({paused:true});
+window.__timelines[C.id] = tl;
+const F=(el,from,to,t)=>tl.fromTo(el,from,{...to,immediateRender:false},t);
+const out=(els,id,d=.2)=>{const s=scene(id), t=s.start+s.dur-d-.08; tl.to(els,{opacity:0,duration:d},t); tl.set(els,{opacity:0},t+d+.02);};
+
+F("#thing",{opacity:0,scale:.2},{opacity:1,scale:1,duration:.5,ease:"back.out(1.8)"},cue("open"));
+out("#thing","hook");
+F("#m1",{opacity:0,y:60},{opacity:1,y:0,duration:.5,ease:"expo.out"},cue("moment"));
+F("#m2",{opacity:0,y:30},{opacity:1,y:0,duration:.4,ease:"expo.out"},cue("moment")+.35);
+out(["#m1","#m2"],"moment");
+F("#n1",{opacity:0,scale:.8},{opacity:1,scale:1,duration:.5,ease:"back.out(1.6)"},cue("name"));
+F("#n2",{opacity:0,y:20},{opacity:1,y:0,duration:.4,ease:"expo.out"},cue("name")+.3);
+tl.to({},{duration:C.duration},0);
+</script>
+</body>
+</html>

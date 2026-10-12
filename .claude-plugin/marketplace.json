@@ -1,0 +1,7 @@
+{
+  "name": "motion-director",
+  "owner": { "name": "Oxde" },
+  "plugins": [
+    { "name": "motion-director", "source": "./", "description": "Direct and build promo videos in HyperFrames: idea first, one timeline, proof before delivery." }
+  ]
+}

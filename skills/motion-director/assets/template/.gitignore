@@ -1,0 +1,6 @@
+out/
+index.build.html
+cues.js
+assets/audio/mix.wav
+assets/audio/mix_pre.wav
+__pycache__/
